@@ -11,7 +11,7 @@ class PokeAPIWrapper:
         self.base_url = "https://pokeapi.co/api/v2/"
         self.headers = {"Accept": "application/json"}
 
-    def load_pokemon_data(self, pokemon_name: str) -> dict:
+    def load_pokemon_data(self, pokemon_name):
         URL = self.base_url + f"pokemon/{pokemon_name}"
         try:
             response = requests.get(URL, headers=self.headers)
@@ -23,7 +23,7 @@ class PokeAPIWrapper:
                 f"Error retrieving data for {pokemon_name} at {URL}: {e}")
             return None
 
-    def get_pokemon(self, pokemon_name: str) -> dict:
+    def get_pokemon(self, pokemon_name):
         data = self.load_pokemon_data(pokemon_name)
         if data is not None:
             return {
@@ -38,7 +38,7 @@ class PokeAPIWrapper:
         else:
             return None
 
-    def get_pokemon_image(self, pokemon_name: str) -> dict:
+    def get_pokemon_image(self, pokemon_name):
         data = self.load_pokemon_data(pokemon_name)
         if data is not None:
             try:
@@ -49,16 +49,20 @@ class PokeAPIWrapper:
                      front_default sprite not found.")
                 return None
 
-    def get_pokemon_moves(self, pokemon_name: str) -> dict:
+    def get_pokemon_moves(self, pokemon_name):
         data = self.load_pokemon_data(pokemon_name)
         if data is not None:
-            return {
-                "moves": [move["move"]["name"] for move in data["moves"]]
-            }
-        else:
-            return None
+            moves = []
+            for move in data["moves"]:
+                moves.append(
+                                {
+                                    "move": move["move"]["name"],
+                                    "url": move["move"]["url"],
+                                }
+                            )
+            return moves
 
-    def search_pokemon_by_type(self, pokemon_type: str) -> list:
+    def search_pokemon_by_type(self, pokemon_type):
         URL = self.base_url + f"type/{pokemon_type}"
         try:
             response = requests.get(URL, headers=self.headers)
