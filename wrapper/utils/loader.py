@@ -14,7 +14,8 @@ def parse_args():
         version="%(prog)s 1.0",
     )
     parser.add_argument(
-        "--get_pokemon",
+        "-p",
+        "--pokemon",
         help="Get information about a specific Pokemon",
         type=str,
     )
